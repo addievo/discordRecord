@@ -6,24 +6,20 @@ import obswebsocket
 from obswebsocket import obsws, requests
 import time
 
-
 popout = None
 # Chromium Webdriver
 
 options = webdriver.ChromeOptions()
 options.add_argument('--enable-logging')
 
-driver = webdriver.Chrome( options=options)
+driver = webdriver.Chrome(options=options)
 
 # Open the website
 
 driver.get('https://discord.com/login')
 
-
 print("Please log in to Discord and navigate to a server or chat. Waiting for 30 seconds...")
 time.sleep(10)
-
-
 
 print("Wait finished. Starting to check if the button was clicked...")
 
@@ -52,14 +48,23 @@ while not popout_detected:
         popout_detected = True
     time.sleep(5)
 
+
 def start_recording():
     print("Starting recording...")
     # Start recording here
+    host = '192.168.1.92'
+    port = 4444
+
+    ws = obsws(host, port)
+    ws.connect()
+
+    ws.call(requests.StartRecording())
+
+    ws.disconnect()
 
 
 if popout_detected is True:
     start_recording()
-
 
 # Close the browser
 # driver.quit()
