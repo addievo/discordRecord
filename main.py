@@ -19,7 +19,7 @@ driver.get('https://discord.com/login')
 
 
 print("Please log in to Discord and navigate to a server or chat. Waiting for 30 seconds...")
-time.sleep(30)
+time.sleep(10)
 
 
 
@@ -47,14 +47,15 @@ def start_recording():
     # Start recording here
 
 
-# In your loop:
-while True:
+popout_detected = False
+
+while not popout_detected:
     if is_popout():
         print("Popout detected!")
         start_recording()
-        break  # This breaks out of the while loop
-    time.sleep(5)  # Check every 5 seconds
+        popout_detected = True
+    time.sleep(5)
 
 
 # Close the browser
-driver.quit()
+# driver.quit()
