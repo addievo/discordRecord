@@ -52,20 +52,16 @@ while not popout_detected:
 
 def start_recording():
     print("Starting recording...")
-
-    try:
-        # Initialize the client
-        client = obs.ReqClient(host='192.168.1.92', port=4444)  # Assuming no password
-
-        # Start recording in OBS
-        client.set_current_program_scene("StartRecording")
-        print("Recording started...")
-    except Exception as e:
-        print(e)
-
+    ws = obs.ReqClient(host='192.168.1.92', port=4444)  # No password as you mentioned
+    ws.start_record()  # Use this method to start the recording
+    time.sleep(30)
+    print("Recorded for 30 seconds. Stopping recording...")
+    ws.stop_record()
 
 if popout_detected is True:
     start_recording()
+
+
 
 # Close the browser
 # driver.quit()
