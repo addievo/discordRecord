@@ -3,7 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import obswebsocket
-from obswebsocket import obsws, requests
+import obsws_python as obs
+
 import time
 
 popout = None
@@ -51,16 +52,16 @@ while not popout_detected:
 
 def start_recording():
     print("Starting recording...")
-    # Start recording here
-    host = '192.168.1.92'
-    port = 4444
 
-    ws = obsws(host, port)
-    ws.connect()
+    try:
+        # Initialize the client
+        client = obs.ReqClient(host='192.168.1.92', port=4444)  # Assuming no password
 
-    ws.call(requests.StartRecording())
-
-    ws.disconnect()
+        # Start recording in OBS
+        client.set_current_program_scene("StartRecording")
+        print("Recording started...")
+    except Exception as e:
+        print(e)
 
 
 if popout_detected is True:
