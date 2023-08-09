@@ -41,18 +41,20 @@ def is_popout():
     # Switch back to the original window in case the loop didn't find the popout
     driver.switch_to.window(main_window)
     return False
-# In your loop:
-while True:
-    if is_popout():
-        print("Popout detected!")
-        popout = True
-
-        # Do something here (e.g., start recording)
-    time.sleep(5)  # Check every 5 seconds
 
 def start_recording():
     print("Starting recording...")
     # Start recording here
+
+
+# In your loop:
+while True:
+    if is_popout():
+        print("Popout detected!")
+        start_recording()
+        break  # This breaks out of the while loop
+    time.sleep(5)  # Check every 5 seconds
+
 
 # Close the browser
 driver.quit()
