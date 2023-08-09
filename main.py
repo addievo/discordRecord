@@ -22,7 +22,7 @@ driver.get('https://discord.com/login')
 print("Please log in to Discord and navigate to a server or chat. Waiting for 30 seconds...")
 time.sleep(10)
 
-print("Wait finished. Starting to check if the button was clicked...")
+print("Wait finished. Starting to check if popout window is detected...")
 
 
 def is_popout():
