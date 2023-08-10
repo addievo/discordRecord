@@ -1,17 +1,44 @@
 import time
+import json
 
 import obsws_python as obs
 from selenium import webdriver
 
 ws = obs.ReqClient(host='192.168.1.92', port=4444)  # No password as you mentioned
 
-popout = None
 # Chromium Webdriver
 
 options = webdriver.ChromeOptions()
 options.add_argument('--enable-logging')
 
 driver = webdriver.Chrome(options=options)
+
+# Adding cookies to check if previously logged in
+
+cookie_file = 'discord_cookies.json'
+
+try:
+    with open(cookie_file, 'r') as file:
+        cookies = json.load(file)
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+
+        # Refresh the page to apply the cookies and navigate to app
+
+        driver.get('https://discord.com/app')
+
+except FileNotFoundError:
+    print("No cookies file found. Please log in to Discord and navigate to a server or chat. Waiting for 30 seconds...")
+    time.sleep(30)
+
+    print("Wait finished. Saving cookies...")
+
+    cookies = driver.get_cookies()
+    with open(cookie_file, 'w') as file:
+        json.dump(cookies, file)
+
+    print("Cookies saved.")
+
 
 # Open the website
 
