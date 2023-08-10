@@ -13,6 +13,8 @@ ws = obs.ReqClient(host='localhost', port=4444)
 # Chromium Webdriver
 
 options = webdriver.ChromeOptions()
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+options.add_argument(f"user-agent={user_agent}")
 options.add_argument('--enable-logging')
 driver = webdriver.Chrome(options=options)
 
@@ -20,6 +22,7 @@ driver = webdriver.Chrome(options=options)
 driver.get('https://discord.com')
 script_directory = os.path.dirname(os.path.realpath(__file__))
 cookie_file = os.path.join(script_directory, 'discord_cookies.json')
+print(cookie_file)
 try:
     with open(cookie_file, 'r') as file:
         cookies = json.load(file)
