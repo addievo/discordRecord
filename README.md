@@ -37,6 +37,9 @@ pip install -r requirements.txt
 5. **Start a Call**: Begin a call on Discord and open it in a popout window.
 6. The script will detect the popout window and start recording the call in OBS.
 7. Once the popout window is closed, the recording will stop, and the video will be saved to your default OBS recording location (usually `Videos` folder in your user directory).
+```
+%USERPROFILE%\Videos
+```
 
 ## Features
 
