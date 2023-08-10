@@ -18,38 +18,8 @@ options.add_argument(f"user-agent={user_agent}")
 options.add_argument('--enable-logging')
 driver = webdriver.Chrome(options=options)
 
-# Adding cookies to check if previously logged in
-driver.get('https://discord.com')
-script_directory = os.path.dirname(os.path.realpath(__file__))
-cookie_file = os.path.join(script_directory, 'discord_cookies.json')
-print(cookie_file)
-try:
-    with open(cookie_file, 'r') as file:
-        cookies = json.load(file)
-        for cookie in cookies:
-            driver.add_cookie(cookie)
+driver.get('https://discord.com/login')
 
-        # Refresh the page to apply the cookies and navigate to app
-
-        driver.get('https://discord.com/app')
-
-        # Check if the login was successful; if not, ask the user to login manually
-        if "login" in driver.current_url:
-            raise FileNotFoundError
-
-except FileNotFoundError:
-    print("No cookies file found. Please log in to Discord and navigate to a server or chat. Waiting for 30 seconds...")
-    time.sleep(15)
-
-    cookies = driver.get_cookies()
-    with open(cookie_file, 'w') as file:
-        json.dump(cookies, file)
-
-    print("Cookies saved.")
-
-initial_window_count = len(driver.window_handles)
-
-print("Waiting for window popup to start recording...")
 
 def is_popout_open():
     try:
@@ -66,10 +36,6 @@ def start_recording():
 
 def stop_recording():
     ws.stop_record()
-    cookies = driver.get_cookies()
-    with open(cookie_file, 'w') as file:
-        json.dump(cookies, file)
-    print("Cookies updated.")
 
 
 def gentle_exit(signum, frame):
