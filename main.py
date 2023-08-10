@@ -1,13 +1,10 @@
+import signal
 import time
-import json
 import obsws_python as obs
 from selenium import webdriver
-import signal
 from selenium.common.exceptions import WebDriverException
-import os
 
-print("Current Working Directory:", os.getcwd())
-
+print("Make sure OBS is running and setup with the correct port - 4444 before starting this script.")
 ws = obs.ReqClient(host='localhost', port=4444)
 
 # Chromium Webdriver
@@ -19,7 +16,7 @@ options.add_argument('--enable-logging')
 driver = webdriver.Chrome(options=options)
 
 driver.get('https://discord.com/login')
-
+print("Please login and start a call. Then, open the popout window and wait for the recording to start.")
 
 def is_popout_open():
     try:
@@ -63,5 +60,8 @@ while True:
         while is_popout_open():
             time.sleep(5)
         print("Popout closed. Stopping recording...")
+        print("File saved to localuser/Videos")
+        print("Either close the browser to gracefully exit, or open another popout to record another call.")
+        print("The script runs in the background, so you can continue using your computer while recording.")
         stop_recording()
     time.sleep(10)
