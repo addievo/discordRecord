@@ -1,11 +1,9 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import obswebsocket
-import obsws_python as obs
-
 import time
+
+import obsws_python as obs
+from selenium import webdriver
+
+ws = obs.ReqClient(host='192.168.1.92', port=4444)  # No password as you mentioned
 
 popout = None
 # Chromium Webdriver
@@ -24,44 +22,37 @@ time.sleep(10)
 
 print("Wait finished. Starting to check if popout window is detected...")
 
-
-def is_popout():
-    # Store the original window handle
-    main_window = driver.current_window_handle
-
-    # Check for new windows
-    for handle in driver.window_handles:
-        if handle != main_window:
-            driver.switch_to.window(handle)
-            if driver.current_url == "https://discord.com/popout":
-                return True
-
-    # Switch back to the original window in case the loop didn't find the popout
-    driver.switch_to.window(main_window)
-    return False
+# Simplifying to just check if the popout window is detected, instead of active
+initial_window_count = len(driver.window_handles)
 
 
-popout_detected = False
+def is_popout_open():
+    return len(driver.window_handles) > initial_window_count
 
-while not popout_detected:
-    if is_popout():
+
+popout_opened = False
+
+# Wait for the popout to open
+while not popout_opened:
+    if is_popout_open():
         print("Popout detected!")
-        popout_detected = True
+        popout_opened = True
     time.sleep(5)
 
 
 def start_recording():
     print("Starting recording...")
-    ws = obs.ReqClient(host='192.168.1.92', port=4444)  # No password as you mentioned
-    ws.start_record()  # Use this method to start the recording
-    time.sleep(30)
-    print("Recorded for 30 seconds. Stopping recording...")
+    ws.start_record()
+
+
+def stop_recording():
     ws.stop_record()
 
-if popout_detected is True:
+
+if popout_opened:
     start_recording()
-
-
-
-# Close the browser
-# driver.quit()
+    # Wait for the popout to close
+    while is_popout_open():
+        time.sleep(5)
+    print("Popout closed. Stopping recording...")
+    stop_recording()
