@@ -3,6 +3,10 @@ import json
 import obsws_python as obs
 from selenium import webdriver
 import signal
+from selenium.common.exceptions import WebDriverException
+import os
+
+print("Current Working Directory:", os.getcwd())
 
 ws = obs.ReqClient(host='localhost', port=4444)
 
@@ -14,8 +18,8 @@ driver = webdriver.Chrome(options=options)
 
 # Adding cookies to check if previously logged in
 driver.get('https://discord.com')
-cookie_file = 'discord_cookies.json'
-
+script_directory = os.path.dirname(os.path.realpath(__file__))
+cookie_file = os.path.join(script_directory, 'discord_cookies.json')
 try:
     with open(cookie_file, 'r') as file:
         cookies = json.load(file)
@@ -45,7 +49,12 @@ initial_window_count = len(driver.window_handles)
 print("Waiting for window popup to start recording...")
 
 def is_popout_open():
-    return len(driver.window_handles) > initial_window_count
+    try:
+        return len(driver.window_handles) > 1  # Assuming initial window + popout
+    except WebDriverException:
+        print("Lost connection to Chrome. Exiting.")
+        gentle_exit(None, None)
+        return False  # This line won't actually be reached due to gentle_exit, but it's here for clarity.
 
 def start_recording():
     print("Starting recording...")
@@ -54,18 +63,23 @@ def start_recording():
 
 def stop_recording():
     ws.stop_record()
-
-
-def gentle_exit(signum, frame):
-    print("Exiting...")
-    stop_recording()
-    # Save cookies
     cookies = driver.get_cookies()
     with open(cookie_file, 'w') as file:
         json.dump(cookies, file)
-    print("Cookies saved.")
-    driver.quit()
-    exit(0)
+    print("Cookies updated.")
+
+
+def gentle_exit(signum, frame):
+    print("Exiting gracefully...")
+    try:
+        stop_recording()
+    except WebDriverException:
+        print("Could not save cookies due to lost connection to Chrome.")
+    finally:
+        driver.quit()
+        exit(0)
+
+# Register the gentle_exit function to handle termination signals
 
 signal.signal(signal.SIGTERM, gentle_exit)
 signal.signal(signal.SIGINT, gentle_exit)
