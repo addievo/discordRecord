@@ -12,7 +12,9 @@ This script automates the process of recording Discord call popouts using OBS (O
    pip install obsws-python selenium
    ```
 
-4. **Webdriver**: This script uses Selenium with Chrome. Ensure you have the [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) downloaded and placed in a location in your system's PATH.
+4. **Webdriver**: This script uses Selenium with Chrome. Ensure you have the [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) downloaded and placed in a location in your system's PATH. 
+
+# Highly recommended to directly install Chrome on your system to prevent reliance on chromedriver.
 
 ## Dependencies can be installed by using the requirements.txt
 
