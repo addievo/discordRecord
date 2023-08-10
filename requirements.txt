@@ -1,0 +1,2 @@
+obsws_python==1.5.2
+selenium==4.11.2
